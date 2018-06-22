@@ -1,0 +1,99 @@
+
+var Config={
+    loginUrl:"/phone/login.html"
+};
+var httpUtil=(function(){
+    function goLogin()
+    {
+         var loginUrl="http://"+window.location.host+Config.loginUrl;
+                window.location.href=loginUrl;
+    }
+    var httpHost=  'http://127.0.0.1:3000';//'http://10.95.236.211:9999';  http://192.168.191.1:9999
+    return {ajax:function(option){
+        var sessionKey=appcan.locStorage.getVal('sessionID');
+        if(sessionKey)
+        {
+            option.headers=[];
+            option.headers['sessionID'] =sessionKey;
+        }
+        else
+        {
+            if(!option.notNeedSessionKey)
+            {
+                goLogin();
+            }
+            
+        }
+        var contentType=option.contentType;
+        contentType=contentType?contentType:'application/json';
+        option.contentType= contentType;
+        var serverName=option.serverName;
+        serverName=serverName?serverName:'/api/v1';
+        option.url=httpHost+serverName+option.url;
+        
+        var customerror=option.error;
+        
+        option.error=function(xhr, errorType, error,msg)
+        {
+            
+            if((xhr.status==506||xhr.status==0)&&!option.notNeedSessionKey)
+            {
+               goLogin();
+            }
+            else if(typeof customerror =='function')
+            {
+                return customerror(xhr, errorType, error,msg);
+            }
+        }
+        
+        // option.offline=true;
+        return appcan.ajax(option);
+    },
+    SopPortalHost:httpHost+'/SopPortal',
+    goLogin:goLogin
+    }
+    
+}()) ;
+
+
+
+function getSearchMonthLastDay(selMonth) {
+    var date = new Date();
+    if (selMonth) {
+        date.setMonth(selMonth - 1);
+    }
+    var currentMonth = date.getMonth();
+    var nextMonth = ++currentMonth;
+    var nextMonthFirstDay = new Date(date.getFullYear(), nextMonth, 1);
+    var oneDay = 1000 * 60 * 60 * 24;
+    var lastDate = new Date(nextMonthFirstDay - oneDay);
+    return lastDate.getDate();
+}
+ 
+function getSearchMonthLastMonth(selMonth) {
+    var date = new Date();
+    if (selMonth) {
+        date.setMonth(selMonth - 1);
+    }
+    var currentMonth = date.getMonth();
+    var nextMonth = ++currentMonth;
+    return nextMonth;
+}
+//获取基准字体大小
+function getBaseFontSize()
+{
+    var valueToReturn=16;
+    var fonts=$('html').css('font-size');
+    if(fonts)
+    {
+        fonts=fonts.substr(0,fonts.indexOf('px'));
+        try{
+            valueToReturn=parseInt(fonts);
+        }
+        catch(e)
+        {
+            
+        }
+    }
+    return valueToReturn;
+}
