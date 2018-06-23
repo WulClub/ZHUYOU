@@ -1,4 +1,9 @@
-/*! appcan v1.1.1 |  from 3g2win.com *//* Zepto v1.1.4 - zepto event ajax form ie - zeptojs.com/license */
+/*! appcan v1.1.0 web |  from 3g2win.com *//* Zepto v1.1.4 - zepto event ajax form ie - zeptojs.com/license */
+var isWeb = true;
+var scriptFiles=document.scripts;
+var projectBasePath=scriptFiles[scriptFiles.length-1].src.substring(0,scriptFiles[scriptFiles.length-1].src.lastIndexOf("/js/")+1);
+var pluginJS = projectBasePath + 'js/plugins.js';
+document.write('<script language=javascript src="' + pluginJS + '"></script>');
 
 var Zepto = (function() {
   var undefined, key, $, classList, emptyArray = [], slice = emptyArray.slice, filter = emptyArray.filter,
@@ -7683,6 +7688,7 @@ appcan && appcan.define('file',function($,exports,module){
             //         console.log("err===>"+err);
             //     }
             // });
+            uexFileMgr.writeFile(optId,mode,content);
             uexFileMgr.cbWriteFile = function(opCode,dataType,data) {
                 if(data==0){
                      close(opCode);//成功
@@ -7690,7 +7696,6 @@ appcan && appcan.define('file',function($,exports,module){
                      close(opCode);//失败，也把文件关闭
                 }
             }
-            uexFileMgr.writeFile(optId,mode,content);
             callback(null); 
         },content);
     }
@@ -7732,6 +7737,7 @@ appcan && appcan.define('file',function($,exports,module){
             //         console.log("err===>"+err);
             //     }
             // });
+            uexFileMgr.writeFile(optId,mode,content);
             uexFileMgr.cbWriteFile = function(opCode,dataType,data) {
                 if(data==0){
                      close(opCode);//成功
@@ -7739,7 +7745,6 @@ appcan && appcan.define('file',function($,exports,module){
                      close(opCode);//失败，也把文件关闭
                 }
             }
-            uexFileMgr.writeFile(optId,mode,content);
             callback(null);
         });
     }
@@ -8611,7 +8616,7 @@ appcan && appcan.define('request',function($,exports,module){
         //添加app认证信息
         addAppVerify(settings);
         
-        if(settings.data && (settings.contentType === false||settings.contentType === 'application/x-www-form-urlencoded')){
+        if(settings.data && settings.contentType === false){
             for(name in settings.data){
                 //fixed Number 类型bug
                 if(appcan.isPlainObject(settings.data[name])){
@@ -11914,7 +11919,7 @@ appcan && appcan.define('download',function($,exports,module){
 
 });
 
-/**
+;/**
  *update:修改run方法扩展全局配置option到run对象/2016.01.29/jiaobingqian
  */
 appcan.define("icache", function($, exports, module) {
@@ -11929,6 +11934,7 @@ appcan.define("icache", function($, exports, module) {
             maxtask : 3
         }, option, true);
         self.on("NEXT_SESSION", self._next);
+
     }
 
 
@@ -12035,15 +12041,15 @@ appcan.define("icache", function($, exports, module) {
             }
             for(var i=0;i<urls.length;i++){
                 option.url=urls[i];
-                var session = $.extend({
-                    id : ("" + (opid++)),
-                    status : 0
-                }, option, true);
-                self.waiting.push(session);
+            var session = $.extend({
+                id : ("" + (opid++)),
+                status : 0
+            }, option, true);
+            self.waiting.push(session);
             }
             appcan.file.getRealPath("box://",function(err,data,dataType,optId){
                 self.realpath = data;
-                self.emit("NEXT_SESSION");
+            self.emit("NEXT_SESSION");
             });
         },
         clearcache:function(){
@@ -12055,7 +12061,7 @@ appcan.define("icache", function($, exports, module) {
         return new iCache(option);
     };
 });
-/*
+;/*
     author:jiaobingqian
     email:bingqian.jiao@zymobi.com
     description:构建appcan widget模块
@@ -14360,7 +14366,6 @@ appcan.define('widgetOne', function($, exports, module) {
         };
       }
 
-
       // Compile all model attributes as accessors within the context:
       var modelAttributes = _.extend({}, source.attributes, _.isFunction(source.c) ? source.c() : {});
       _.each(modelAttributes, function(value, attribute) {
@@ -14632,4 +14637,32 @@ MVVM.Collection.prototype.echarts = function(attr, lab) {
         return arr;
     }
     return [];
-}
+}; 
+
+;(function(doc, win) {
+    var winPlat = window.navigator.platform;
+    var isIOS = (winPlat == 'iPad' || winPlat == 'iPod' || winPlat == 'iPhone');
+    var docEl = doc.documentElement,
+        resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+        recalc = function() {
+        var clientWidth = docEl.clientWidth;
+        //alert(clientWidth)
+        if (!clientWidth)
+            return;
+        if (!isIOS) {
+            var ftSize = Math.floor(16 * (clientWidth / 320));
+            if (ftSize < 16) {
+                ftSize = 12;
+            } else if (ftSize < 32) {
+                ftSize = 16;
+            }
+            docEl.style.fontSize = ftSize + 'px';
+            document.body.setAttribute('style', '');
+        }
+    };
+    // Abort if browser does not support addEventListener
+    if (!doc.addEventListener)
+        return;
+    win.addEventListener(resizeEvt, recalc, false);
+    doc.addEventListener('DOMContentLoaded', recalc, false);
+})(document, window);

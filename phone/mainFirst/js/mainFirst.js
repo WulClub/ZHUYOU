@@ -7,22 +7,31 @@
         });
 
     appcan.ready(function () {
-        $.scrollbox($("body")).on("releaseToReload",
-            function () { //After Release or call reload function,we reset the bounce
-                $("#ScrollContent").trigger("reload", this);
-            }).on("onReloading",
-            function (a) { //if onreloading status, drag will trigger this event
-            }).on("dragToReload",
-            function () { //drag over 30% of bounce height,will trigger this event
-            }).on("draging",
-            function (status) { //on draging, this event will be triggered.
-            }).on("release",
-            function () { //on draging, this event will be triggered.
-            }).on("scrollbottom",
-            function () { //on scroll bottom,this event will be triggered.you should get data from server
-                $("#ScrollContent").trigger("more", this);
-            }).hide();
+
     })
+
+    var topicId='';
+    appcan.button("#doReply", "btn-act",
+        function () {
+        var url="/topic/"+topicId+"/replies";
+            httpUtil.ajax({
+                url: url,
+                type: "POST",
+                notNeedSessionKey:true,
+                data : {
+
+                    content : $("#replycontent").val()
+                },
+                success: function(data) {
+                    var jsonData =  data ;
+                    console.log(jsonData)
+                },
+                error: function(e, err) {
+                    alert(err)
+                    console.log(e);
+                }
+            });
+        });
 
     /*mvvm*/
     var Service = new MVVM.Service({
@@ -44,8 +53,8 @@
                         var perTopic = topics[i]
                         if (perTopic) {
                             var theTargetObj = {};
-                            theTargetObj.avator = httpUtil.serverHost+ perTopic.author.avatar_url;
-                            theTargetObj.username = perTopic.author.loginname;
+                            perTopic.avator_url = httpUtil.serverHost+ perTopic.author.avatar_url;
+                            perTopic.loginname = perTopic.author.loginname;
                             var lastReplyAt = new Date(perTopic.last_reply_at);
 
                             var curDate = new Date();
@@ -64,15 +73,18 @@
                             else if (parseInt(agoTime / 1000) > 0) {
                                 timeTxt = parseInt(agoTime / 1000) + '秒前';
                             }
-                            theTargetObj.time = timeTxt;
-                            theTargetObj.content = perTopic.content;
-                            theTargetObj.topicId = perTopic.id;
-                            valueToR.push(theTargetObj);
+                            // theTargetObj.time = timeTxt;
+                            // theTargetObj.content = perTopic.content;
+                            // theTargetObj.topicId = perTopic.id;
+                            // theTargetObj.replies = perTopic.replies;
+                            // theTargetObj.replies = perTopic.replies;
+                            // valueToR.push(theTargetObj);
+                            perTopic.time=timeTxt;
                         }
                     }
                 }
             }
-            return valueToR;
+            return data.data;
         },
         doerror: function (e, err, option) {
             return err;
@@ -82,78 +94,8 @@
         },
         ajaxCall: function (data, option) {
             var self = this;
-            var data = [{
-                "avator": "\'main/css/myImg/comImg.png\'",
-                "username": "AppCan论坛客户端网友",
-                "time": "7小时前",
-                "city": "北京市",
-                "content": "兄弟你说的在理！",
-                "followReply": [{
-                    "replyName": "杰伦",
-                    "replyContent": "这个快速开发工具相当好用，谢谢开发者和正益无线！"
-                }],
-                "praise": "9"
-            }, {
-                "avator": "\'main/css/myImg/icon1.png\'",
-                "username": "一个猫",
-                "time": "7小时前",
-                "city": "北京市",
-                "content": "蛮不错的平台。",
-                "followReply": [],
-                "praise": "12"
-            }, {
-                "avator": "\'main/css/myImg/icon2.png\'",
-                "username": "啊呀呀",
-                "time": "7小时前",
-                "city": "北京市",
-                "content": "蛮不错的平台，谢谢开发者！蛮不错的平台，谢谢开发者！蛮不错的平台，谢谢开发者！蛮不错的平台，谢谢开发者！",
-                "followReply": [],
-                "praise": "12"
-            }, {
-                "avator": "\'main/css/myImg/icon3.png\'",
-                "username": "杰伦",
-                "time": "7小时前",
-                "city": "北京市",
-                "content": "这个快速开发工具相当好用，谢谢开发者和正益无线！",
-                "followReply": [],
-                "praise": "12"
-            }
-                , {
-                    "avator": "\'main/css/myImg/icon3.png\'",
-                    "username": "杰伦",
-                    "time": "7小时前",
-                    "city": "北京市",
-                    "content": "这个快速开发工具相当好用，谢谢开发者和正益无线！",
-                    "followReply": [],
-                    "praise": "12"
-                }
-                , {
-                    "avator": "\'main/css/myImg/icon3.png\'",
-                    "username": "杰伦",
-                    "time": "7小时前",
-                    "city": "北京市",
-                    "content": "这个快速开发工具相当好用，谢谢开发者和正益无线！",
-                    "followReply": [],
-                    "praise": "12"
-                }
-                , {
-                    "avator": "\'main/css/myImg/icon3.png\'",
-                    "username": "杰伦",
-                    "time": "7小时前",
-                    "city": "北京市",
-                    "content": "这个快速开发工具相当好用，谢谢开发者和正益无线！",
-                    "followReply": [],
-                    "praise": "12"
-                }, {
-                    "avator": "\'main/css/myImg/icon2.png\'",
-                    "username": "啊呀呀",
-                    "time": "7小时前",
-                    "city": "北京市",
-                    "content": "蛮不错的平台，谢谢开发者！蛮不错的平台，谢谢开发者！蛮不错的平台，谢谢开发者！蛮不错的平台，谢谢开发者！",
-                    "followReply": [],
-                    "praise": "12"
-                }];
-             //option.success(self.dosuccess(data, option));
+
+             // option.success(self.dosuccess(data, option));
 
             var _topicsRestful = "/topics";
 
@@ -229,15 +171,15 @@
         itemEvents: {
             "tap #div_content": function (ev, param) {
                 var thisTopicId = this.model.attributes.topicId;
-
-                appcan.locStorage.setVal('curtopicid', thisTopicId);
+                topicId=thisTopicId;
+                /*appcan.locStorage.setVal('curtopicid', thisTopicId);
                 var _target = 'showtopic.html';
                 appcan.window.open({
                     name: 'showtopic',
                     dataType: 0,
                     aniId: 2,
                     data: _target
-                });
+                });*/
             }
         }
 

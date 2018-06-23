@@ -27,10 +27,10 @@
     <div class="ub ub-ver" id="comment" data-bind="collection:$collection">
       <div mvvm-scope>
         <ul ontouchstart="appcan.touch('btn-act')" class="ubb ub bc-border lis">
-          <li class="uh-app3 uw-app3 uc-a-app2 ub-img mar-ar1" data-bind="css:{'background-image':format('url($1)',avator)}"></li>
+          <li class="uh-app3 uw-app3 uc-a-app2 ub-img mar-ar1" data-bind="css:{'background-image':format('url($1)',avatar_url)}"></li>
           <li class="ub-f1 ub ub-ver">
             <div class="ub ub-f1 ub-ac">
-              <div class="ut-s ulev-4 sc-text-active" data-bind="text:username"></div>
+              <div class="ut-s ulev-4 sc-text-active" data-bind="text:loginname"></div>
             </div>
             <div class="ub umar-t">
               <div class="ub-f1 ub t-gra-comm ulev-2">
@@ -43,11 +43,12 @@
               </div>
             </div>
             <div class="t-bla ulev-4 ub-f1 umar-t" data-bind="html:content" id="div_content"></div>
-            <div data-bind="for:followReply" mvvm-scope>
+
+            <div data-bind="for:replies" mvvm-scope>
               <div class="uba bc-border sc-bg-active  uc-a1 umar-at1">
                 <div class="uinn-comm ulev-4">
-                  <div class="sc-text-active line-hei-com" data-bind="text:replyName"></div>
-                  <div class="t-gra2-comm line-hei-com" data-bind="text:replyContent"></div>
+                  <div class="sc-text-active line-hei-com" data-bind="text:author.loginName"></div>
+                  <div class="t-gra2-comm line-hei-com" data-bind="html:content"></div>
                 </div>
               </div>
             </div>
@@ -56,18 +57,30 @@
       </div>
     </div>
 
+      <div class="uba b-gra3 uc-a1 c-wh ub uinn-a7 ub-ac umar-at1">
+          <div class="ulev-app1 umw4">
+             回复
+          </div>
+          <div class="ub ub-ac umh5 ub-f1">
+              <div class="uinput ub ub-f1">
+                  <textarea id="replycontent" placeholder="内容" class="ub-f1"></textarea>
+              </div>
+          </div>
+      </div>
+      <div class="ub ub-ver">
+
+          <div class="uinn-at1">
+              <div class="button ub ub-ac bc-text-head ub-pc bc-btn" id="doReply">
+                  回复
+              </div>
+          </div>
+      </div>
   </div>
 </div>
         </div>
         <script src="js/appcan.js"></script>
         <script src="js/appcan.control.js"></script>
         <script src="js/appcan.scrollbox.js"></script>
-        <script src="js/template.import.js"></script>
-		<script src="js/appcan.listview.js"></script>
-		<script src="js/appcan.optionList.js"></script>
-		<script src="js/appcan.slider.js"></script>
-		<script src="js/appcan.tab.js"></script>
-		<script src="js/appcan.treeview.js"></script>
 		<script src="js/commonUtil.js"></script>
         <script src="mainFirst/js/mainFirst.js"></script>
     </body>

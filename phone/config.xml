@@ -16,5 +16,5 @@
     <removeloading/>
     <debug/>
     <partobfuscation/>
-    <webapp>false</webapp>
+    <webapp>true</webapp>
 </widget>

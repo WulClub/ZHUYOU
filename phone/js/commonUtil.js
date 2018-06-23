@@ -48,7 +48,7 @@ var httpUtil = (function () {
             // option.offline=true;
             return appcan.ajax(option);
         },
-        serverHost: 'http://192.168.191.1:3000',
+        serverHost: 'http://localhost:3000',
         goLogin: goLogin
     }
 
